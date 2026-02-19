@@ -55,58 +55,76 @@ Transport modes:
 
 ### Sets
 
-- \(N\): Cities  
-- \(M\): Transportation modes  
-- \(A \subseteq N \times N \times M\): Valid directed arcs  
+- N: Cities  
+- M: Transportation modes  
+- A ⊆ N × N × M: Valid directed arcs  
+
+---
 
 ### Parameters
 
-- \(d_i\): Net supply/demand at city \(i\)  
-- \(c_{ijm}\): Variable cost per unit flow  
-- \(f_{ijm}\): Fixed activation cost  
-- \(\text{cap}_{ijm}\): Capacity  
-- \(e_{ijm}\): Emissions per unit flow  
-- \(E_{\max}\): Emissions cap  
-- \(\alpha\): Minimum clean-mode quota  
+- d_i: Net supply/demand at city i  
+- c_ijm: Variable cost per unit flow  
+- f_ijm: Fixed activation cost  
+- cap_ijm: Capacity  
+- e_ijm: Emissions per unit flow  
+- E_max: Emissions cap  
+- alpha: Minimum clean-mode quota  
+
+---
 
 ### Decision Variables
 
-- \(x_{ijm} \ge 0\): Flow on arc \((i,j,m)\)  
-- \(y_{ijm} \in \{0,1\}\): Route activation indicator  
+- x_ijm ≥ 0 : Flow on arc (i, j, m)  
+- y_ijm ∈ {0,1} : Route activation indicator  
+
+---
 
 ### Objective Function
 
-\[
-\min \sum_{(i,j,m)\in A} \left( f_{ijm} y_{ijm} + c_{ijm} x_{ijm} \right)
-\]
+Minimize:
+
+Sum over all (i,j,m) in A of:
+
+    f_ijm * y_ijm  +  c_ijm * x_ijm
+
+---
 
 ### Constraints
 
-**Flow Balance**
+**1) Flow Balance (for each city i):**
 
-\[
-\sum_{(i,j,m)} x_{ijm} - \sum_{(j,i,m)} x_{jim} = d_i \quad \forall i \in N
-\]
+Sum over outgoing arcs x_ijm  
+minus  
+Sum over incoming arcs x_jim  
+equals  
+d_i
 
-**Capacity Linking**
+---
 
-\[
-x_{ijm} \le \text{cap}_{ijm} \cdot y_{ijm}
-\]
+**2) Capacity Linking:**
 
-**Emissions Cap**
+x_ijm ≤ cap_ijm * y_ijm
 
-\[
-\sum_{(i,j,m)} e_{ijm} x_{ijm} \le E_{\max}
-\]
+---
 
-**Clean Transport Quota**
+**3) Emissions Cap:**
 
-Let total flow \(F\) and clean flow \(F_{clean}\):
+Sum over all arcs ( e_ijm * x_ijm ) ≤ E_max
 
-\[
-F_{clean} \ge \alpha F
-\]
+---
+
+**4) Clean Transport Quota:**
+
+Let:
+
+Total_Flow = Sum over all arcs x_ijm  
+Clean_Flow = Sum over arcs where mode ∈ {Van, Train}
+
+Constraint:
+
+Clean_Flow ≥ alpha * Total_Flow
+
 
 ---
 
